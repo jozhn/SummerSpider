@@ -14,7 +14,7 @@ def get_json(id,limit,offset):
         'lng':'xxx',
         'offset': offset ,
         'q[school_id_eq]': id , 
-        #'scope':'global'
+        'scope':'global'
     }
     headers = {
         'Host':'imsummer.cn', 
@@ -22,10 +22,10 @@ def get_json(id,limit,offset):
         'Connection':'keep-alive', 
         'platform':'ios' ,
         'Accept':'*/*', 
-        'version':'2.1.2', 
-        'User-Agent':'Summer/2.1.2 (iPhone; iOS 10.3.3; Scale/2.00)',
+        'version':'2.2.0', 
+        'User-Agent':'Summer/2.2.0 (iPhone; iOS 10.3.3; Scale/2.00)',
         'Accept-Language':'zh-Hans-CN;q=1, en-CN;q=0.9, zh-Hant-CN;q=0.8',
-        'Authorization':'user_auth',
+        'Authorization':'xxxxxxxxxxxx',
         'Accept-Encoding':'gzip, deflate'
     }
     r = requests.get(url, params=payload, headers=headers, verify=False)
@@ -34,18 +34,16 @@ def get_json(id,limit,offset):
     if r.text == "[]" :
         return 0
     else:
-        file = open(id+"-"+str(int(offset/100))+".json",'ab')
+        file = open(id+"-"+str(offset)+".json",'wb')
         a = r.text
         a = a.encode("UTF-8","ignore")
-        #json.dump(a,file)
         file.write(a)
-        #print("ok")
         file.close()
         return 1
 
 if __name__ == '__main__':
-    schools = [#高校列表
-        "school_id",#XX大学
+    schools = [#大陆高校
+                #其他高校
     ]
 	
     # 禁用安全请求警告
@@ -53,8 +51,9 @@ if __name__ == '__main__':
     
     for i in range(len(schools)):
         print(i+1)
-        limit=30
-        get_json(schools[i], limit, 0)
+        if get_json(schools[i], 30, 0) == 0 :
+            print("none")
+
         limit=100
         offset=30
         while True :
@@ -62,4 +61,5 @@ if __name__ == '__main__':
                 break
             else:
                 offset = offset+100
+                
     print("Done!")
